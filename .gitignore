@@ -1,0 +1,5 @@
+/.venv
+/TestImages
+*debug.png
+*/__pycache__
+*/Test.py

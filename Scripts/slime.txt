@@ -1,0 +1,13 @@
+0 summonscreen
+1 kaguya
+1 okbutton
+0 attackbutton
+1 sarasasummer
+0 skillmenucheck
+1 groundzero
+1 backbutton
+0 attackbutton
+1 lunalussr
+0 skillmenucheck
+1 facsimile
+1 reloadbutton
