@@ -3,6 +3,7 @@ import cv2 as cv
 import numpy as np
 import time
 import random as rand
+import os
 from windowCapture import WinCapture
 from GWParser import GWParser
 
@@ -87,29 +88,53 @@ def imagePreProcessing(imagePath, templatePath):
     template = cv.imread(templatePath, cv.IMREAD_GRAYSCALE)
     return imageGRAY, template
 
-def Threo(script):
-    queue = GWParser.loadQueue(script)
-    while queue.qsize():
-        items = queue.get()
-        location, itemsFound = matchAll(items=items, elapsedTime=10,toleranceFactor=2.2 ,debug=False)
-        if int(items[0]):
-            try:
-                x = location[0][0][0]
-                y = location[0][1][0]
-                xOffset = location[0][0][1]
-                yOffset = location[0][1][1]
+def listFiles(directory="..\\Scripts\\"):
+    files = []
+    for item in os.listdir(directory):
+        if os.path.isfile(os.path.join(directory, item)):
+            files.append(item)
+    return files
+
+def selectFile(files):
+    selectedFile = ""
+    for i, file in enumerate(files):
+        print(f"({i+1}) {file}")
+    while True:
+        selectedFile = int(input("Select script:"))
+        if 1 <= selectedFile <= len(files):
+            return files[selectedFile - 1]
+
+def Threo(script, repeat=1):
+    for _ in range(repeat):
+        queue = GWParser.loadQueue(script)
+        while queue.qsize():
+            items = queue.get()
+            location, itemsFound = matchAll(items=items, elapsedTime=10,toleranceFactor=2.2 ,debug=False)
+            if int(items[0]):
+                try:
+                    x = location[0][0][0]
+                    y = location[0][1][0]
+                    xOffset = location[0][0][1]
+                    yOffset = location[0][1][1]
+                    print(f"{items} was found")
+                    clickItem(x, y, xOffset, yOffset)
+                    # moveToItem(x, y, xOffset, yOffset)
+                except IndexError as e :
+                    print(f"{items} was not found")
+                    break
+            else:
+                if not itemsFound:
+                    print(f"{items} was not found")
+                    break
                 print(f"{items} was found")
-                clickItem(x, y, xOffset, yOffset)
-                # moveToItem(x, y, xOffset, yOffset)
-            except IndexError as e :
-                print(f"{items} was not found")
-                break
-        else:
-            if not itemsFound:
-                print(f"{items} was not found")
-                break
-            print(f"{items} was found")
+            time.sleep(1)
+
 
 if __name__ == "__main__": 
+    path = "..\\Scripts\\"
+    files = listFiles()
+    script = selectFile(files)
+    Threo(path + script, repeat=1)
+    # Threo(script)
     # Threo("..\Scripts\slime.txt")
-    Threo("..\Scripts\\test.txt")
+    # Threo("..\Scripts\\test.txt")
