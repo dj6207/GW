@@ -1,0 +1,21 @@
+0 summonscreen
+1 kaguya whiterabbit huanglong qilin
+0 cancelbutton
+1 okbutton
+3 sleep 1
+2 okbutton
+0 waveone attackbutton
+1 quicksummon
+1 backbutton
+0 wavetwo attackbutton
+1 sarasasummer
+0 skillmenucheck
+1 groundzero
+1 backbutton
+0 wavethree attackbutton
+1 lunalussr
+0 skillmenucheck
+1 facsimile
+1 reloadbutton
+0 okbutton
+1 angelhalo

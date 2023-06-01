@@ -23,10 +23,8 @@ def matchAll(items, toleranceFactor=3 ,elapsedTime=10, threshold=0.8, debug=Fals
     """
 
     items = items[1:]
-    print(items)
+    # print(items)
     itemsFound = 0
-
-
     startTime = time.time()
     for item in items:
         while True:
@@ -66,7 +64,7 @@ def clickItem(x, y, xOffset, yOffset):
         tween = pya.easeOutBounce
     newX = x + rand.uniform(-xOffset, xOffset)
     newY = y + rand.uniform(-yOffset, yOffset)
-    pya.click(x=newX, y=newY, duration=dur, tween=tween)
+    pya.click(clicks=2, x=newX, y=newY, duration=dur, tween=tween)
 
 def distanceFormula(current, next):
     return np.sqrt(np.square(next[0] - current[0]) + np.square(next[1] - current[1]))
@@ -104,37 +102,68 @@ def selectFile(files):
         if 1 <= selectedFile <= len(files):
             return files[selectedFile - 1]
 
+def mouseLogic(items, location, itemsFound):
+    code = items[0]
+    match code:
+        case '1':
+            if itemsFound:
+                x = location[0][0][0]
+                y = location[0][1][0]
+                xOffset = location[0][0][1]
+                yOffset = location[0][1][1]
+                print(f"{items} was found")
+                clickItem(x, y, xOffset, yOffset)
+                return False
+            print(f"{items} was not found")
+            return True
+        case '2':
+            if itemsFound:
+                x = location[0][0][0]
+                y = location[0][1][0]
+                xOffset = location[0][0][1]
+                yOffset = location[0][1][1]
+                print(f"{items} was found")
+                clickItem(x, y, xOffset, yOffset)
+            print(f"{items} passed")
+            return False
+        case '3':
+            sleep = rand.uniform(0, int(items[2]))
+            time.sleep(sleep)
+            return False
+        case _:
+            # this case will just be zero
+            if itemsFound:
+                print(f"{items} was found")
+                return False
+            print(f"{items} was not found")
+            return True
+
 def Threo(script, repeat=1):
     for _ in range(repeat):
         queue = GWParser.loadQueue(script)
         while queue.qsize():
             items = queue.get()
-            location, itemsFound = matchAll(items=items, elapsedTime=10,toleranceFactor=2.2 ,debug=False)
-            if int(items[0]):
-                try:
-                    x = location[0][0][0]
-                    y = location[0][1][0]
-                    xOffset = location[0][0][1]
-                    yOffset = location[0][1][1]
-                    print(f"{items} was found")
-                    clickItem(x, y, xOffset, yOffset)
-                    # moveToItem(x, y, xOffset, yOffset)
-                except IndexError as e :
-                    print(f"{items} was not found")
-                    break
-            else:
-                if not itemsFound:
-                    print(f"{items} was not found")
-                    break
-                print(f"{items} was found")
-            time.sleep(1)
+            location, itemsFound = matchAll(items=items, elapsedTime=10, toleranceFactor=2.2 ,debug=False)
+            logic = mouseLogic(items, location, itemsFound)
+            if logic:
+                break
+            sleep = rand.uniform(1, 2)
+            time.sleep(sleep)
 
 
 if __name__ == "__main__": 
     path = "..\\Scripts\\"
     files = listFiles()
     script = selectFile(files)
-    Threo(path + script, repeat=1)
+    Threo(path + script, repeat=3)
     # Threo(script)
     # Threo("..\Scripts\slime.txt")
     # Threo("..\Scripts\\test.txt")
+
+
+    """
+    Notes
+    Make a command so that the system can stop
+    Make better scripts
+    Clean up code
+    """
